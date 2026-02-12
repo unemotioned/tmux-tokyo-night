@@ -1,3 +1,59 @@
+# 1.0.0 (2026-02-12)
+
+
+* feat!: fixes and other things ([#74](https://github.com/UnEmotioneD/tmux-tokyo-night/issues/74)) ([e24e503](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/e24e503c3d5fc7ca4bed727baf38ceb948242d74))
+
+
+### Bug Fixes
+
+* add battery to list of plugins in table ([bc4d532](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/bc4d5321a60c160844f85fb6a9c48f6d7c628f89))
+* **battery:** Colors / icons not updating ([106bc2b](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/106bc2bd33cd99ffdf042df2f5aff8448550fea6))
+* **battery:** remove space after battery icon ([1d7ca1f](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/1d7ca1fbdf63e427b998b7dbc7d4ac8bcdbf44a6))
+* end separator ([05e6d94](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/05e6d94974c6d04a3205fcdfb1d65f2298b005cf))
+* extra space after active window name ([29a086e](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/29a086e354fb9e99fef60058cab9a112818a6dd4))
+* fix file permission ([474b81d](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/474b81dd355b91195b66571eb7879311003a8119))
+* fixing [@theme-plugins](https://github.com/theme-plugins) parameter for [@theme](https://github.com/theme)_plugins ([d8b0253](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/d8b0253288c4b101eddeaf4c879de3c9ee65184d))
+* fixing typo ([5fa4885](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/5fa4885bbf28bb743e54f46f0e999846d162d2b7))
+* Forgot transparent and left_separator_inverse ([a0228fe](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/a0228fec97267dbf395862787a3bb981b44a3dc3))
+* Improve tmux compatibility ([6c67c7b](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/6c67c7b591f5d017bfd27b3716ae08e18ad4b529))
+* removing theme_enable_icons ([c053ee2](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/c053ee2562cfdecbadca59fde6d62f15194c1602))
+* removing unused line ([8e51ec2](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/8e51ec211cf6286997db5acfe3ba594492020bfe))
+* run shellcheck on pull_requests ([31d10c0](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/31d10c065af23fee3bd1f59cf27cc24b3429e13f))
+* shellcheck issues ([e3b58ba](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/e3b58baaa0217671ee8ac6331ae147bfb3c4c3b8))
+* shellcheck warnings ([8d706a9](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/8d706a9631e88f5aba35f41ce7c3c71e22ca2833))
+* shellcheck warnings about unused vars ([6a340c8](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/6a340c80148eee0a1d7af78ac38376971d2bb73f))
+* **shellcheck:** run files together to fix SC1091 ([df678f1](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/df678f107726f1463667b5e2f5290bae13ff87fd))
+* some fixes ([cc3013c](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/cc3013cca97fcaacdba4ab8c3c4be72131c57490))
+* typos ([c698679](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/c6986790a5a48d4d04da9f5c03919a70b1eb58fd))
+* yay and homebrew signals when there is no packages to update ([bf7b935](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/bf7b935a4458b4ab2700255bb237661eff48c28f))
+
+
+### Features
+
+* add disable plugins functionality ([2cfef45](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/2cfef45f667d02be086025d4a5bf3f831f6b37ad))
+* add homebrew plugin ([31d411c](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/31d411c4c4d5a131142906f2d9bdf768e81b46f7))
+* add playerctl plugin ([1d5570a](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/1d5570a08f8c5814f04cbc1899ead67bf97edc31))
+* add playerctl plugin ([0d05d8c](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/0d05d8c23927540d131394bd5bdd6bf397a9b899))
+* add playerctl plugin ([87cf2d7](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/87cf2d775defb774642b887d27e8e585b5a21663))
+* add synchronized panes indicator ([ecde261](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/ecde2617a5eece581d9f78e07e53e36eea5980da))
+* add yay plugin ([6209478](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/6209478e2df93d957e647a5c028ffaf2dc1c53c2))
+* added additional icons customization options ([0b686ee](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/0b686ee22f02ae1ac437b06a1bf8241861b3c07b))
+* adding the option to customize the session icon ([1f768eb](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/1f768eb941840b778b8c2b68f1d3abfdfbed9fc3))
+* Allow customizing the window title string ([e064b37](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/e064b37f00c6b5cd3754c6da1d4f7fbff11c225b))
+* fix [#37](https://github.com/UnEmotioneD/tmux-tokyo-night/issues/37) transparency support ([3be2aa2](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/3be2aa280242941947d31a0386764e7f78b734bd))
+* **playerctl:** add ability to ignore players ([eef5451](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/eef5451ce3e30d4681f4dbeab3ca015f7290a6bf))
+* **spt-plugin:** add spotify-tui plugin ([377248d](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/377248de5784ba7da3a6c912a8005d4bdc403acb))
+* support exec command ([3efaf68](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/3efaf689746e1b40d5022970b82638a86e591453))
+* support external plugin ([a4a14ee](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/a4a14eeb05f0b7f1f10f491ad3d76f5a76fa5ad6))
+* **weather-plugin:** check for jq first ([e80576b](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/e80576b2d771b2a134f75820d3852ce3de2651a8))
+* **weather:** add Open-Metro as primary API with wttr.in fallback ([b51036d](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/b51036d14328fecb36d595269caaf31d8e775aa3))
+* **weather:** add support for overriding IP-based location ([8f2421a](https://github.com/UnEmotioneD/tmux-tokyo-night/commit/8f2421acb443ce1ab206d1d090fecb7a59efeffd))
+
+
+### BREAKING CHANGES
+
+* just for version bump
+
 # [1.11.0](https://github.com/fabioluciano/tmux-tokyo-night/compare/v1.10.1...v1.11.0) (2025-07-27)
 
 
