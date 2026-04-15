@@ -70,8 +70,8 @@ battery_get_status() {
         local status
         status=$(apm -a 2>/dev/null)
         case "$status" in
-            0) echo "discharging" ;;
-            1) echo "charging" ;;
+        0) echo "discharging" ;;
+        1) echo "charging" ;;
         esac
     fi
 }
@@ -82,7 +82,7 @@ battery_get_status() {
 # -----------------------------------------------------------------------------
 battery_get_percentage() {
     local percentage=""
-    
+
     if is_wsl; then
         local battery_file
         battery_file=$(find /sys/class/power_supply/*/capacity 2>/dev/null | head -n1)
@@ -111,7 +111,7 @@ battery_get_percentage() {
     elif command_exists "apm"; then
         percentage=$(apm -l 2>/dev/null | tr -d '%')
     fi
-    
+
     [[ -n "$percentage" ]] && echo -n "$percentage"
 }
 
@@ -132,7 +132,7 @@ battery_is_available() {
 battery_format_output() {
     local percentage="$1"
     local status="$2"
-    
+
     echo -n "${percentage}%"
 }
 

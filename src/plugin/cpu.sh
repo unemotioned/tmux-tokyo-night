@@ -42,8 +42,8 @@ get_cpu_linux() {
 
     # Read first measurement
     cpu_line=$(grep '^cpu ' /proc/stat)
-    read -ra cpu_values <<< "${cpu_line#cpu }"
-    
+    read -ra cpu_values <<<"${cpu_line#cpu }"
+
     idle_prev=${cpu_values[3]}
     total_prev=0
     for val in "${cpu_values[@]}"; do
@@ -55,8 +55,8 @@ get_cpu_linux() {
 
     # Read second measurement
     cpu_line=$(grep '^cpu ' /proc/stat)
-    read -ra cpu_values <<< "${cpu_line#cpu }"
-    
+    read -ra cpu_values <<<"${cpu_line#cpu }"
+
     idle_curr=${cpu_values[3]}
     total_curr=0
     for val in "${cpu_values[@]}"; do
@@ -69,7 +69,7 @@ get_cpu_linux() {
 
     # Calculate CPU usage percentage
     if [[ $diff_total -gt 0 ]]; then
-        cpu_usage=$(( (1000 * (diff_total - diff_idle) / diff_total + 5) / 10 ))
+        cpu_usage=$(((1000 * (diff_total - diff_idle) / diff_total + 5) / 10))
     else
         cpu_usage=0
     fi
@@ -80,15 +80,15 @@ get_cpu_linux() {
 # Get CPU usage on macOS using top
 get_cpu_macos() {
     local cpu_usage
-    
+
     # Use top in logging mode to get CPU usage
     cpu_usage=$(top -l 1 -n 0 2>/dev/null | grep "CPU usage" | awk '{print $3}' | tr -d '%')
-    
+
     if [[ -z "$cpu_usage" ]]; then
         # Fallback: use ps to estimate
         cpu_usage=$(ps -A -o %cpu | awk '{sum+=$1} END {printf "%.0f", sum}')
     fi
-    
+
     printf '%.0f%%' "$cpu_usage"
 }
 
@@ -106,20 +106,20 @@ load_plugin() {
 
     local result
     case "$(uname -s)" in
-        Linux*)
-            result=$(get_cpu_linux)
-            ;;
-        Darwin*)
-            result=$(get_cpu_macos)
-            ;;
-        *)
-            result="N/A"
-            ;;
+    Linux*)
+        result=$(get_cpu_linux)
+        ;;
+    Darwin*)
+        result=$(get_cpu_macos)
+        ;;
+    *)
+        result="N/A"
+        ;;
     esac
 
     # Update cache
     cache_set "$CACHE_KEY" "$result"
-    
+
     printf '%s' "$result"
 }
 

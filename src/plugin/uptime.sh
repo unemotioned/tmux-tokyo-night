@@ -36,9 +36,9 @@ export plugin_uptime_icon plugin_uptime_accent_color plugin_uptime_accent_color_
 format_uptime() {
     local seconds=$1
     local days=$((seconds / 86400))
-    local hours=$(( (seconds % 86400) / 3600 ))
-    local minutes=$(( (seconds % 3600) / 60 ))
-    
+    local hours=$(((seconds % 86400) / 3600))
+    local minutes=$(((seconds % 3600) / 60))
+
     if [[ $days -gt 0 ]]; then
         printf '%dd %dh' "$days" "$hours"
     elif [[ $hours -gt 0 ]]; then
@@ -76,20 +76,20 @@ load_plugin() {
 
     local result
     case "$(uname -s)" in
-        Linux*)
-            result=$(get_uptime_linux)
-            ;;
-        Darwin*)
-            result=$(get_uptime_macos)
-            ;;
-        *)
-            result="N/A"
-            ;;
+    Linux*)
+        result=$(get_uptime_linux)
+        ;;
+    Darwin*)
+        result=$(get_uptime_macos)
+        ;;
+    *)
+        result="N/A"
+        ;;
     esac
 
     # Update cache
     cache_set "$CACHE_KEY" "$result"
-    
+
     printf '%s' "$result"
 }
 

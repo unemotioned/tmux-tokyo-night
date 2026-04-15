@@ -41,7 +41,7 @@ bytes_to_human() {
     local bytes=$1
     local gb=$((bytes / 1024 / 1024 / 1024))
     local mb=$((bytes / 1024 / 1024))
-    
+
     if [[ $gb -gt 0 ]]; then
         printf '%.1fG' "$(echo "scale=1; $bytes / 1024 / 1024 / 1024" | bc 2>/dev/null || echo "$gb")"
     else
@@ -52,10 +52,10 @@ bytes_to_human() {
 # Get memory usage on Linux
 get_memory_linux() {
     local mem_total mem_available mem_used percent
-    
+
     mem_total=$(grep '^MemTotal:' /proc/meminfo | awk '{print $2}')
     mem_available=$(grep '^MemAvailable:' /proc/meminfo | awk '{print $2}')
-    
+
     # MemAvailable might not exist on older kernels
     if [[ -z "$mem_available" ]]; then
         local mem_free mem_buffers mem_cached
@@ -64,10 +64,10 @@ get_memory_linux() {
         mem_cached=$(grep '^Cached:' /proc/meminfo | awk '{print $2}')
         mem_available=$((mem_free + mem_buffers + mem_cached))
     fi
-    
+
     mem_used=$((mem_total - mem_available))
-    percent=$(( (mem_used * 100) / mem_total ))
-    
+    percent=$(((mem_used * 100) / mem_total))
+
     if [[ "$plugin_memory_format" == "usage" ]]; then
         local used_bytes=$((mem_used * 1024))
         local total_bytes=$((mem_total * 1024))
@@ -80,24 +80,24 @@ get_memory_linux() {
 # Get memory usage on macOS
 get_memory_macos() {
     local page_size mem_total mem_used percent
-    
+
     page_size=$(pagesize 2>/dev/null || sysctl -n hw.pagesize)
     mem_total=$(sysctl -n hw.memsize)
-    
+
     # Get memory pages from vm_stat
     local vm_stat_output
     vm_stat_output=$(vm_stat)
-    
+
     local pages_active pages_wired
     pages_active=$(echo "$vm_stat_output" | grep "Pages active:" | awk '{print $3}' | tr -d '.')
     pages_wired=$(echo "$vm_stat_output" | grep "Pages wired down:" | awk '{print $4}' | tr -d '.')
-    
+
     # Calculate used memory (active + wired)
     local pages_used=$((pages_active + pages_wired))
     mem_used=$((pages_used * page_size))
-    
-    percent=$(( (mem_used * 100) / mem_total ))
-    
+
+    percent=$(((mem_used * 100) / mem_total))
+
     if [[ "$plugin_memory_format" == "usage" ]]; then
         printf '%s/%s' "$(bytes_to_human "$mem_used")" "$(bytes_to_human "$mem_total")"
     else
@@ -119,20 +119,20 @@ load_plugin() {
 
     local result
     case "$(uname -s)" in
-        Linux*)
-            result=$(get_memory_linux)
-            ;;
-        Darwin*)
-            result=$(get_memory_macos)
-            ;;
-        *)
-            result="N/A"
-            ;;
+    Linux*)
+        result=$(get_memory_linux)
+        ;;
+    Darwin*)
+        result=$(get_memory_macos)
+        ;;
+    *)
+        result="N/A"
+        ;;
     esac
 
     # Update cache
     cache_set "$CACHE_KEY" "$result"
-    
+
     printf '%s' "$result"
 }
 

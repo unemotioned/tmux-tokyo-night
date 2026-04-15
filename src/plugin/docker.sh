@@ -36,21 +36,21 @@ export plugin_docker_icon plugin_docker_accent_color plugin_docker_accent_color_
 get_docker_info() {
     # Check if docker is available
     command -v docker &>/dev/null || return
-    
-    # Check if docker daemon is running  
+
+    # Check if docker daemon is running
     docker info &>/dev/null || return
-    
+
     local running stopped
     running=$(docker ps -q 2>/dev/null | wc -l | tr -d ' ')
     stopped=$(docker ps -aq --filter "status=exited" 2>/dev/null | wc -l | tr -d ' ')
-    
+
     # Only show if there are containers
     [[ "$running" -eq 0 && "$stopped" -eq 0 ]] && return
-    
+
     local output=""
     [[ "$running" -gt 0 ]] && output="${running}"
     [[ "$stopped" -gt 0 ]] && output+=" ⏹${stopped}"
-    
+
     echo -n "${output# }"
 }
 
@@ -73,7 +73,7 @@ load_plugin() {
     if [[ -n "$result" ]]; then
         cache_set "$CACHE_KEY" "$result"
     fi
-    
+
     printf '%s' "$result"
 }
 

@@ -65,55 +65,55 @@ get_network_linux() {
     local interface="$1"
     local rx_file="/sys/class/net/${interface}/statistics/rx_bytes"
     local tx_file="/sys/class/net/${interface}/statistics/tx_bytes"
-    
+
     if [[ ! -f "$rx_file" ]]; then
         printf 'N/A'
         return
     fi
-    
+
     # Read current values
     local rx1 tx1 rx2 tx2
     rx1=$(cat "$rx_file")
     tx1=$(cat "$tx_file")
-    
+
     sleep 1
-    
+
     rx2=$(cat "$rx_file")
     tx2=$(cat "$tx_file")
-    
+
     local rx_speed=$((rx2 - rx1))
     local tx_speed=$((tx2 - tx1))
-    
+
     printf '↓%s ↑%s' "$(bytes_to_speed $rx_speed)" "$(bytes_to_speed $tx_speed)"
 }
 
 # Get network stats on macOS
 get_network_macos() {
     local interface="$1"
-    
+
     # Use netstat to get bytes
     local stats1 stats2
     stats1=$(netstat -I "$interface" -b 2>/dev/null | tail -1)
-    
+
     if [[ -z "$stats1" ]]; then
         printf 'N/A'
         return
     fi
-    
+
     local rx1 tx1
     rx1=$(echo "$stats1" | awk '{print $7}')
     tx1=$(echo "$stats1" | awk '{print $10}')
-    
+
     sleep 1
-    
+
     stats2=$(netstat -I "$interface" -b 2>/dev/null | tail -1)
     local rx2 tx2
     rx2=$(echo "$stats2" | awk '{print $7}')
     tx2=$(echo "$stats2" | awk '{print $10}')
-    
+
     local rx_speed=$((rx2 - rx1))
     local tx_speed=$((tx2 - tx1))
-    
+
     printf '↓%s ↑%s' "$(bytes_to_speed $rx_speed)" "$(bytes_to_speed $tx_speed)"
 }
 
@@ -131,24 +131,24 @@ load_plugin() {
 
     local interface="$plugin_network_interface"
     local result
-    
+
     case "$(uname -s)" in
-        Linux*)
-            [[ -z "$interface" ]] && interface=$(get_default_interface_linux)
-            result=$(get_network_linux "$interface")
-            ;;
-        Darwin*)
-            [[ -z "$interface" ]] && interface=$(get_default_interface_macos)
-            result=$(get_network_macos "$interface")
-            ;;
-        *)
-            result="N/A"
-            ;;
+    Linux*)
+        [[ -z "$interface" ]] && interface=$(get_default_interface_linux)
+        result=$(get_network_linux "$interface")
+        ;;
+    Darwin*)
+        [[ -z "$interface" ]] && interface=$(get_default_interface_macos)
+        result=$(get_network_macos "$interface")
+        ;;
+    *)
+        result="N/A"
+        ;;
     esac
 
     # Update cache
     cache_set "$CACHE_KEY" "$result"
-    
+
     printf '%s' "$result"
 }
 

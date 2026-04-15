@@ -29,10 +29,10 @@ content=$("$PLUGIN_SCRIPT" 2>/dev/null) || content=""
 if [[ -n "$content" ]]; then
     # Build icon section
     icon_output="${SEP_ICON_START}#[fg=${WHITE_COLOR},bg=${ACCENT_COLOR_ICON}]${PLUGIN_ICON}${SEP_ICON_END}"
-    
+
     # Build content section
     content_output="#[fg=${WHITE_COLOR},bg=${ACCENT_COLOR}] ${content}#[none]"
-    
+
     # Combine with or without separator
     if [[ "$IS_LAST" != "1" ]]; then
         echo -n "${icon_output}${content_output} ${SEP_END}"

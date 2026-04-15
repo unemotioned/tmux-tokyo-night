@@ -30,24 +30,24 @@ export plugin_git_icon plugin_git_accent_color plugin_git_accent_color_icon
 get_git_info() {
     local pane_path
     pane_path="$(tmux display-message -p '#{pane_current_path}')"
-    
+
     [[ -z "$pane_path" || ! -d "$pane_path" ]] && return
-    
+
     cd "$pane_path" 2>/dev/null || return
-    
+
     # Check if we're in a git repo
     git rev-parse --git-dir &>/dev/null || return
-    
+
     local branch
-    branch=$(git symbolic-ref --short HEAD 2>/dev/null || \
-             git rev-parse --short HEAD 2>/dev/null)
-    
+    branch=$(git symbolic-ref --short HEAD 2>/dev/null ||
+        git rev-parse --short HEAD 2>/dev/null)
+
     [[ -z "$branch" ]] && return
-    
+
     # Get status counts
     local status_output
     status_output=$(git status --porcelain 2>/dev/null)
-    
+
     local changed=0 untracked=0
     while IFS= read -r line; do
         [[ -z "$line" ]] && continue
@@ -56,13 +56,13 @@ get_git_info() {
         else
             ((changed++))
         fi
-    done <<< "$status_output"
-    
+    done <<<"$status_output"
+
     # Build output
     local output="$branch"
     [[ $changed -gt 0 ]] && output+=" ~$changed"
     [[ $untracked -gt 0 ]] && output+=" +$untracked"
-    
+
     echo -n "$output"
 }
 
@@ -72,7 +72,7 @@ get_git_info() {
 
 load_plugin() {
     get_git_info
-    return 0  # Always return success
+    return 0 # Always return success
 }
 
 # Only run if executed directly (not sourced)

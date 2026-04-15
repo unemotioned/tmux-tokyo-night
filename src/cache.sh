@@ -8,7 +8,7 @@
 #
 # Usage:
 #   source "$CURRENT_DIR/cache.sh"
-#   
+#
 #   # Check if cache is valid and get cached value
 #   if cached_value=$(cache_get "plugin_name" "$ttl_seconds"); then
 #       echo "$cached_value"
@@ -63,10 +63,10 @@ cache_is_valid() {
     local plugin_name="$1"
     local ttl_seconds="$2"
     local cache_file="${CACHE_DIR}/${plugin_name}.cache"
-    
+
     # Check if cache file exists
     [[ -f "$cache_file" ]] || return 1
-    
+
     # Get file modification time (OS-specific)
     local file_mtime
     if [[ -n "$_CACHE_IS_MACOS" ]]; then
@@ -74,11 +74,11 @@ cache_is_valid() {
     else
         file_mtime=$(stat -c "%Y" "$cache_file" 2>/dev/null) || return 1
     fi
-    
+
     # Check if cache has expired
     local current_time
     current_time=$(date +%s)
-    (( (current_time - file_mtime) < ttl_seconds ))
+    (((current_time - file_mtime) < ttl_seconds))
 }
 
 # -----------------------------------------------------------------------------
@@ -98,14 +98,14 @@ cache_get() {
     local plugin_name="$1"
     local ttl_seconds="$2"
     local cache_file="${CACHE_DIR}/${plugin_name}.cache"
-    
+
     cache_init
-    
+
     if cache_is_valid "$plugin_name" "$ttl_seconds"; then
         cat "$cache_file"
         return 0
     fi
-    
+
     return 1
 }
 
@@ -119,9 +119,9 @@ cache_get() {
 cache_set() {
     local plugin_name="$1"
     local value="$2"
-    
+
     cache_init
-    echo -n "$value" > "${CACHE_DIR}/${plugin_name}.cache"
+    echo -n "$value" >"${CACHE_DIR}/${plugin_name}.cache"
 }
 
 # -----------------------------------------------------------------------------
@@ -156,19 +156,28 @@ cache_remaining_ttl() {
     local plugin_name="$1"
     local ttl_seconds="$2"
     local cache_file="${CACHE_DIR}/${plugin_name}.cache"
-    
-    [[ -f "$cache_file" ]] || { printf '0'; return; }
-    
+
+    [[ -f "$cache_file" ]] || {
+        printf '0'
+        return
+    }
+
     local file_mtime
     if [[ -n "$_CACHE_IS_MACOS" ]]; then
-        file_mtime=$(stat -f "%m" "$cache_file" 2>/dev/null) || { printf '0'; return; }
+        file_mtime=$(stat -f "%m" "$cache_file" 2>/dev/null) || {
+            printf '0'
+            return
+        }
     else
-        file_mtime=$(stat -c "%Y" "$cache_file" 2>/dev/null) || { printf '0'; return; }
+        file_mtime=$(stat -c "%Y" "$cache_file" 2>/dev/null) || {
+            printf '0'
+            return
+        }
     fi
-    
+
     local current_time remaining
     current_time=$(date +%s)
     remaining=$((ttl_seconds - (current_time - file_mtime)))
-    
-    (( remaining > 0 )) && printf '%d' "$remaining" || printf '0'
+
+    ((remaining > 0)) && printf '%d' "$remaining" || printf '0'
 }

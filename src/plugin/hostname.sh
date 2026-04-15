@@ -30,14 +30,14 @@ export plugin_hostname_icon plugin_hostname_accent_color plugin_hostname_accent_
 load_plugin() {
     local hostname_format
     hostname_format=$(get_tmux_option "@theme_plugin_hostname_format" "short")
-    
+
     case "$hostname_format" in
-        full)
-            hostname -f 2>/dev/null || hostname
-            ;;
-        short|*)
-            hostname -s 2>/dev/null || hostname | cut -d. -f1
-            ;;
+    full)
+        hostname -f 2>/dev/null || hostname
+        ;;
+    short | *)
+        hostname -s 2>/dev/null || hostname | cut -d. -f1
+        ;;
     esac
 }
 

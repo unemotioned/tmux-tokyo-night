@@ -42,27 +42,27 @@ get_k8s_info() {
         printf ''
         return
     fi
-    
+
     local context namespace
     context=$(kubectl config current-context 2>/dev/null)
-    
+
     if [[ -z "$context" ]]; then
         printf ''
         return
     fi
-    
+
     # Shorten common context name patterns
-    context="${context##*@}"  # Remove user@ prefix
-    context="${context##*:}"  # Remove cluster prefix
-    
+    context="${context##*@}" # Remove user@ prefix
+    context="${context##*:}" # Remove cluster prefix
+
     local output="$context"
-    
+
     if [[ "$plugin_kubernetes_show_namespace" == "true" ]]; then
         namespace=$(kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null)
         [[ -z "$namespace" ]] && namespace="default"
         output+="/$namespace"
     fi
-    
+
     printf '%s' "$output"
 }
 
@@ -83,7 +83,7 @@ load_plugin() {
 
     # Update cache
     cache_set "$CACHE_KEY" "$result"
-    
+
     printf '%s' "$result"
 }
 
