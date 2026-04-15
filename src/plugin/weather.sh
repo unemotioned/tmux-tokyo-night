@@ -29,7 +29,6 @@ plugin_weather_unit=$(get_tmux_option "@theme_plugin_weather_unit" "")
 # Cache TTL in seconds (default: 900 seconds = 15 minutes)
 WEATHER_CACHE_TTL=$(get_tmux_option "@theme_plugin_weather_cache_ttl" "900")
 WEATHER_CACHE_KEY="weather"
-WEATHER_LOCATION_CACHE_KEY="weather_location"
 WEATHER_LOCATION_CACHE_TTL="3600" # 1 hour for location
 
 export plugin_weather_icon plugin_weather_accent_color plugin_weather_accent_color_icon
@@ -44,39 +43,6 @@ export plugin_weather_icon plugin_weather_accent_color plugin_weather_accent_col
 # -----------------------------------------------------------------------------
 weather_check_dependencies() {
     command -v curl &>/dev/null
-}
-
-# -----------------------------------------------------------------------------
-# Detect location via IP (cached separately with longer TTL)
-# Returns: Location string
-# -----------------------------------------------------------------------------
-weather_detect_location() {
-    local cached_location
-
-    # Try cache first (location doesn't change often)
-    if cached_location=$(cache_get "$WEATHER_LOCATION_CACHE_KEY" "$WEATHER_LOCATION_CACHE_TTL"); then
-        printf '%s' "$cached_location"
-        return 0
-    fi
-
-    # Need jq for location detection
-    if ! command -v jq &>/dev/null; then
-        printf ''
-        return 1
-    fi
-
-    local location
-    location=$(curl -s --connect-timeout 5 --max-time 10 https://ip-api.com/json 2>/dev/null |
-        jq -r '"\(.city), \(.country)"' 2>/dev/null)
-
-    if [[ -n "$location" && "$location" != "null, null" && "$location" != ", " ]]; then
-        cache_set "$WEATHER_LOCATION_CACHE_KEY" "$location"
-        printf '%s' "$location"
-        return 0
-    fi
-
-    printf ''
-    return 1
 }
 
 # -----------------------------------------------------------------------------
