@@ -361,11 +361,8 @@ src/
 ├── utils.sh                # Common utilities (88 lines)
 ├── theme.sh                # Main theme loader
 ├── conditional_plugin.sh   # Conditional plugin wrapper
-├── palletes/               # Color schemes (4 variants)
-│   ├── night.sh
-│   ├── storm.sh
-│   ├── moon.sh
-│   └── day.sh
+├── palletes/               # Color scheme
+│   └── storm.sh
 └── plugin/                 # Plugin modules (15 total)
     ├── git.sh             # Example: ~82 lines
     ├── kubernetes.sh

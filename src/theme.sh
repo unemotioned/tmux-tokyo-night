@@ -7,12 +7,11 @@ CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=src/utils.sh
 . "$CURRENT_DIR/utils.sh"
 
-theme_variation=$(get_tmux_option "@theme_variation" "night")
 theme_disable_plugins=$(get_tmux_option "@theme_disable_plugins" 0)
 theme_bar_layout=$(get_tmux_option "@theme_bar_layout" "single")
 
-# shellcheck source=src/palletes/night.sh
-. "$CURRENT_DIR/palletes/$theme_variation.sh"
+# shellcheck source=src/palletes/storm.sh
+. "$CURRENT_DIR/palletes/storm.sh"
 
 ### Load Options
 border_style_active_pane=$(get_tmux_option "@theme_active_pane_border_style" "${PALLETE['dark5']}")

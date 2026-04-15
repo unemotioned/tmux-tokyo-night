@@ -65,7 +65,6 @@ run-shell ~/.tmux/plugins/tmux-tokyo-night/tmux-tokyo-night.tmux
 
 | Option                          | Description                               | Values                          | Default            |
 | ------------------------------- | ----------------------------------------- | ------------------------------- | ------------------ |
-| `@theme_variation`              | Color scheme variation                    | `night`, `storm`, `moon`, `day` | `night`            |
 | `@theme_plugins`                | Comma-separated list of plugins to enable | See [Plugins](#plugins)         | `datetime,weather` |
 | `@theme_disable_plugins`        | Disable all plugins                       | `0`, `1`                        | `0`                |
 | `@theme_bar_layout`             | Status bar layout mode                    | `single`, `double`              | `single`           |
@@ -345,7 +344,6 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'fabioluciano/tmux-tokyo-night'
 
 # Tokyo Night Theme Configuration
-set -g @theme_variation 'night'
 set -g @theme_plugins 'datetime,cpu,memory,network,git,docker,kubernetes'
 
 # Plugin customization
