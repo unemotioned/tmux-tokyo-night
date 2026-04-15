@@ -11,7 +11,7 @@
     <a href="#plugins"><img src="https://img.shields.io/badge/Plugins-red?style=flat-square" alt="Plugins"></a>
   </p>
 
-> ⚠️ **Version 2.0 - Breaking Changes**: This release includes significant refactoring with improved plugin architecture and caching system. See [Migration Guide](#migration-from-v1) below.
+> A minimal tmux theme with Tokyo Night Storm colors and weather plugin.
 
 ---
 
@@ -19,13 +19,11 @@
 
 ## ✨ Features
 
-- 🎨 **Multiple color variations**: Night, Storm, Moon, and Day
-- 🔌 **15 built-in plugins** for system monitoring and information display
+- 🎨 **Tokyo Night Storm** color scheme
+- 🌤️ **Weather plugin** using Open-Meteo API (free, no API key required)
 - 🪟 **Transparency support** with customizable separators
 - 📊 **Double bar layout** option for separating windows and plugins
-- ⚡ **Smart caching system** for improved performance (configurable TTL per plugin)
-- 🔧 **Highly customizable** with per-plugin configuration options
-- 🎯 **Conditional plugins** (git, docker) that only appear when relevant
+- ⚡ **Smart caching system** for improved performance (configurable TTL)
 
 ## 📸 Screenshots
 
@@ -65,7 +63,7 @@ run-shell ~/.tmux/plugins/tmux-tokyo-night/tmux-tokyo-night.tmux
 
 | Option                          | Description                               | Values                          | Default            |
 | ------------------------------- | ----------------------------------------- | ------------------------------- | ------------------ |
-| `@theme_plugins`                | Comma-separated list of plugins to enable | See [Plugins](#plugins)         | `datetime,weather` |
+| `@theme_plugins`                | Comma-separated list of plugins to enable | `weather`                      | `weather`          |
 | `@theme_disable_plugins`        | Disable all plugins                       | `0`, `1`                        | `0`                |
 | `@theme_bar_layout`             | Status bar layout mode                    | `single`, `double`              | `single`           |
 | `@theme_transparent_status_bar` | Enable transparency                       | `true`, `false`                 | `false`            |
@@ -127,209 +125,20 @@ You can use these colors for any `accent_color` or `accent_color_icon` option:
 Enable plugins by adding them to the `@theme_plugins` option:
 
 ```bash
-set -g @theme_plugins 'cpu,memory,network,git,datetime'
+set -g @theme_plugins 'weather'
 ```
 
-### System Monitoring
+### Weather
 
-#### CPU
-
-Displays current CPU usage percentage.
-
-| Option                                | Description           | Default  |
-| ------------------------------------- | --------------------- | -------- |
-| `@theme_plugin_cpu_icon`              | Plugin icon           | ` `      |
-| `@theme_plugin_cpu_accent_color`      | Background color      | `yellow` |
-| `@theme_plugin_cpu_accent_color_icon` | Icon background color | `orange` |
-
-#### Memory
-
-Displays current memory usage.
-
-| Option                                   | Description                          | Default   |
-| ---------------------------------------- | ------------------------------------ | --------- |
-| `@theme_plugin_memory_icon`              | Plugin icon                          | ` `       |
-| `@theme_plugin_memory_accent_color`      | Background color                     | `magenta` |
-| `@theme_plugin_memory_accent_color_icon` | Icon background color                | `purple`  |
-| `@theme_plugin_memory_format`            | Display format: `percent` or `usage` | `percent` |
-
-**Format options:**
-
-- `percent`: Shows percentage (e.g., `45%`)
-- `usage`: Shows used/total (e.g., `4.2G/16G`)
-
-#### Network
-
-Displays network download/upload speeds.
-
-> **Note:** This plugin uses a 1-second `sleep` to calculate network speed, which may cause minor delays during each status refresh. Consider using a longer tmux `status-interval` (e.g., 5+ seconds) when using this plugin.
-
-| Option                                    | Description                                | Default |
-| ----------------------------------------- | ------------------------------------------ | ------- |
-| `@theme_plugin_network_icon`              | Plugin icon                                | `󰛳 `    |
-| `@theme_plugin_network_accent_color`      | Background color                           | `cyan`  |
-| `@theme_plugin_network_accent_color_icon` | Icon background color                      | `blue2` |
-| `@theme_plugin_network_interface`         | Network interface (auto-detected if empty) | `""`    |
-
-#### Uptime
-
-Displays system uptime.
-
-| Option                                   | Description           | Default  |
-| ---------------------------------------- | --------------------- | -------- |
-| `@theme_plugin_uptime_icon`              | Plugin icon           | `󰔟 `     |
-| `@theme_plugin_uptime_accent_color`      | Background color      | `green1` |
-| `@theme_plugin_uptime_accent_color_icon` | Icon background color | `teal`   |
-
-### Development
-
-#### Git
-
-Displays current git branch and status. **Only shows when in a git repository.**
-
-| Option                                | Description           | Default  |
-| ------------------------------------- | --------------------- | -------- |
-| `@theme_plugin_git_icon`              | Plugin icon           | ` `      |
-| `@theme_plugin_git_accent_color`      | Background color      | `green`  |
-| `@theme_plugin_git_accent_color_icon` | Icon background color | `green2` |
-
-**Status indicators:**
-
-- `~N`: N files modified
-- `+N`: N untracked files
-
-#### Docker
-
-Displays Docker container status. **Only shows when Docker is running and has containers.**
-
-| Option                                   | Description           | Default |
-| ---------------------------------------- | --------------------- | ------- |
-| `@theme_plugin_docker_icon`              | Plugin icon           | ` `     |
-| `@theme_plugin_docker_accent_color`      | Background color      | `blue`  |
-| `@theme_plugin_docker_accent_color_icon` | Icon background color | `blue0` |
-
-**Status indicators:**
-
-- `N`: N running containers
-- `⏹N`: N stopped containers
-
-#### Kubernetes
-
-Displays current Kubernetes context and namespace.
-
-| Option                                       | Description           | Default   |
-| -------------------------------------------- | --------------------- | --------- |
-| `@theme_plugin_kubernetes_icon`              | Plugin icon           | `󱃾 `      |
-| `@theme_plugin_kubernetes_accent_color`      | Background color      | `purple`  |
-| `@theme_plugin_kubernetes_accent_color_icon` | Icon background color | `magenta` |
-| `@theme_plugin_kubernetes_show_namespace`    | Show namespace        | `true`    |
-
-### Information
-
-#### Datetime
-
-Displays current date and time.
-
-| Option                                     | Description            | Default       |
-| ------------------------------------------ | ---------------------- | ------------- |
-| `@theme_plugin_datetime_icon`              | Plugin icon            | ` `           |
-| `@theme_plugin_datetime_accent_color`      | Background color       | `blue0`       |
-| `@theme_plugin_datetime_accent_color_icon` | Icon background color  | `blue`        |
-| `@theme_plugin_datetime_format`            | strftime format string | `%D %H:%M:%S` |
-
-#### Hostname
-
-Displays the system hostname.
-
-| Option                                     | Description           | Default  |
-| ------------------------------------------ | --------------------- | -------- |
-| `@theme_plugin_hostname_icon`              | Plugin icon           | `󰒋 `     |
-| `@theme_plugin_hostname_accent_color`      | Background color      | `orange` |
-| `@theme_plugin_hostname_accent_color_icon` | Icon background color | `red`    |
-
-#### Weather
-
-Displays current weather information. Requires `curl`. Note: `jq` is optional and only needed for auto-location detection via IP; if you provide a location via `@theme_plugin_weather_location`, the plugin works without `jq`.
+Displays current weather information using Open-Meteo API. Requires `curl` and `jq`.
 
 | Option                                    | Description                                             | Default       |
 | ----------------------------------------- | ------------------------------------------------------- | ------------- |
 | `@theme_plugin_weather_icon`              | Plugin icon                                             | ` `           |
-| `@theme_plugin_weather_accent_color`      | Background color                                        | `orange`      |
-| `@theme_plugin_weather_accent_color_icon` | Icon background color                                   | `yellow`      |
-| `@theme_plugin_weather_format`            | Weather format (e.g., temperature and humidity)         | `%t H:%h`     |
-| `@theme_plugin_weather_location`          | Location (city, country)                                | Auto-detected |
-| `@theme_plugin_weather_unit`              | Unit system: `u` (USCS), `m` (metric), `M` (metric m/s) | Auto          |
-
-**Format placeholders:**
-
-- `%t`: Temperature
-- `%c`: Condition
-- `%h`: Humidity
-- `%w`: Wind speed
-
-### Media & Applications
-
-#### Playerctl
-
-Displays currently playing media. **Linux only** (uses MPRIS).
-
-| Option                                      | Description           | Default                  |
-| ------------------------------------------- | --------------------- | ------------------------ |
-| `@theme_plugin_playerctl_icon`              | Plugin icon           | ` `                      |
-| `@theme_plugin_playerctl_accent_color`      | Background color      | `magenta`                |
-| `@theme_plugin_playerctl_accent_color_icon` | Icon background color | `purple`                 |
-| `@theme_plugin_playerctl_format`            | Playerctl format      | `{{artist}} - {{title}}` |
-| `@theme_plugin_playerctl_ignore_players`    | Players to ignore     | `""`                     |
-
-#### Spotify (spt)
-
-Displays Spotify playback via `spt` CLI.
-
-| Option                                | Description                     | Default   |
-| ------------------------------------- | ------------------------------- | --------- |
-| `@theme_plugin_spt_icon`              | Plugin icon                     | ` `       |
-| `@theme_plugin_spt_accent_color`      | Background color                | `green`   |
-| `@theme_plugin_spt_accent_color_icon` | Icon background color           | `green1`  |
-| `@theme_plugin_spt_format`            | Format string for playback info | `%a - %t` |
-
-### Package Managers
-
-#### Homebrew
-
-Displays number of outdated Homebrew packages. **macOS only.**
-
-| Option                                     | Description           | Default  |
-| ------------------------------------------ | --------------------- | -------- |
-| `@theme_plugin_homebrew_icon`              | Plugin icon           | `󰜋 `     |
-| `@theme_plugin_homebrew_accent_color`      | Background color      | `yellow` |
-| `@theme_plugin_homebrew_accent_color_icon` | Icon background color | `orange` |
-
-#### Yay (AUR)
-
-Displays number of outdated AUR packages. **Arch Linux only.**
-
-| Option                                | Description           | Default |
-| ------------------------------------- | --------------------- | ------- |
-| `@theme_plugin_yay_icon`              | Plugin icon           | ` `     |
-| `@theme_plugin_yay_accent_color`      | Background color      | `cyan`  |
-| `@theme_plugin_yay_accent_color_icon` | Icon background color | `blue`  |
-
-### Battery
-
-Displays battery status with dynamic colors based on charge level.
-
-| Option                                           | Description                       | Default    |
-| ------------------------------------------------ | --------------------------------- | ---------- |
-| `@theme_plugin_battery_charging_icon`            | Charging icon                     | ``         |
-| `@theme_plugin_battery_discharging_icon`         | Discharging icon                  | `󰁹`        |
-| `@theme_plugin_battery_red_threshold`            | Red warning threshold             | `10`       |
-| `@theme_plugin_battery_yellow_threshold`         | Yellow warning threshold          | `30`       |
-| `@theme_plugin_battery_red_accent_color`         | Color below red threshold         | `red`      |
-| `@theme_plugin_battery_red_accent_color_icon`    | Icon color below red threshold    | `magenta2` |
-| `@theme_plugin_battery_yellow_accent_color`      | Color below yellow threshold      | `yellow`   |
-| `@theme_plugin_battery_yellow_accent_color_icon` | Icon color below yellow threshold | `orange`   |
-| `@theme_plugin_battery_green_accent_color`       | Color above yellow threshold      | `blue7`    |
-| `@theme_plugin_battery_green_accent_color_icon`  | Icon color above yellow threshold | `blue0`    |
+| `@theme_plugin_weather_accent_color`      | Background color                                        | `blue7`       |
+| `@theme_plugin_weather_accent_color_icon` | Icon background color                                   | `blue0`       |
+| `@theme_plugin_weather_unit`              | Unit system: `u` (Fahrenheit), empty (Celsius)          | Celsius       |
+| `@theme_plugin_weather_cache_ttl`         | Cache TTL in seconds                                    | `900`         |
 
 ---
 
@@ -344,12 +153,7 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'fabioluciano/tmux-tokyo-night'
 
 # Tokyo Night Theme Configuration
-set -g @theme_plugins 'datetime,cpu,memory,network,git,docker,kubernetes'
-
-# Plugin customization
-set -g @theme_plugin_datetime_format '%H:%M'
-set -g @theme_plugin_memory_format 'usage'
-set -g @theme_plugin_kubernetes_show_namespace 'true'
+set -g @theme_plugins 'weather'
 
 # Initialize TPM (keep this at the bottom)
 run '~/.tmux/plugins/tpm/tpm'
@@ -384,37 +188,17 @@ Contributions are welcome! Feel free to:
 
 ---
 
-## 🔄 Migration from v1
+## 🗂️ Cache Management
 
-### Breaking Changes in v2.0
-
-1. **Plugin Architecture Refactored**: All plugins now follow a standardized architecture with consistent variable naming and caching support.
-
-2. **Caching System**: Plugins now use a file-based caching system located at `~/.cache/tmux-tokyo-night/`. Each plugin has its own cache file with configurable TTL.
-
-3. **Conditional Plugins**: Git and Docker plugins are now conditional - they only appear when you're in a git repository or when Docker has containers.
-
-4. **Weather Plugin**: Now uses wttr.in's IP-based auto-detection by default. The `jq` dependency is no longer required for basic functionality.
-
-5. **Battery Plugin**: Simplified architecture - no longer uses dynamic color changing via templates. Uses standard plugin format.
-
-### Cache Management
-
-Clear the cache if you experience issues:
+Weather data is cached to reduce API calls. Clear the cache if you experience issues:
 
 ```bash
 rm -rf ~/.cache/tmux-tokyo-night/
 ```
 
-Cache TTL can be configured per plugin:
-
-| Plugin     | Option                            | Default        |
-| ---------- | --------------------------------- | -------------- |
-| Weather    | `@theme_plugin_weather_cache_ttl` | `900` (15 min) |
-| CPU        | Built-in                          | `5` (5 sec)    |
-| Memory     | Built-in                          | `5` (5 sec)    |
-| Network    | Built-in                          | `2` (2 sec)    |
-| Kubernetes | Built-in                          | `30` (30 sec)  |
+| Plugin  | Option                            | Default        |
+| ------- | --------------------------------- | -------------- |
+| Weather | `@theme_plugin_weather_cache_ttl` | `900` (15 min) |
 
 ---
 

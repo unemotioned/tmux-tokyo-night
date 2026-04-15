@@ -26,7 +26,7 @@ fi
 window_with_activity_style=$(get_tmux_option "@theme_window_with_activity_style" "italics")
 window_status_bell_style=$(get_tmux_option "@theme_status_bell_style" "bold")
 
-IFS=',' read -r -a plugins <<<"$(get_tmux_option "@theme_plugins" "datetime,weather")"
+IFS=',' read -r -a plugins <<<"$(get_tmux_option "@theme_plugins" "weather")"
 
 tmux set-option -g status-left-length 100
 tmux set-option -g status-right-length 100
@@ -85,8 +85,7 @@ if [ "$theme_disable_plugins" -ne 1 ]; then
             fi
 
             plugin_script_path="${CURRENT_DIR}/plugin/${plugin}.sh"
-            plugin_execution_string="$(${plugin_script_path})"
-            # shellcheck source=src/plugin/datetime.sh
+            # shellcheck source=src/plugin/weather.sh
             . "$plugin_script_path"
 
             icon_var="plugin_${plugin}_icon"
@@ -115,22 +114,8 @@ if [ "$theme_disable_plugins" -ne 1 ]; then
                 separator_end="#[fg=${PALLETE[bg_highlight]},bg=${accent_color}]${right_separator}#[none]"
             fi
 
-            # Conditional plugins (git, docker) - only show when they have content
-            if [ "$plugin" == "git" ] || [ "$plugin" == "docker" ]; then
-                plugin_output_string="#(${CURRENT_DIR}/conditional_plugin.sh \"${plugin}\" \"${separator_icon_start}\" \"${separator_icon_end}\" \"${separator_end}\" \"${accent_color}\" \"${accent_color_icon}\" \"${plugin_icon}\" \"${is_last_plugin}\" \"${PALLETE[white]}\")"
-                tmux set-option -ga status-right "$plugin_output_string"
-                continue
-            fi
-
             plugin_output_string=""
-
-            # For datetime, we embed the content at load time (uses tmux strftime)
-            # For other plugins, we use #() to execute dynamically
-            if [ "$plugin" == "datetime" ]; then
-                plugin_output="#[fg=${PALLETE[white]},bg=${accent_color}]${plugin_execution_string}#[none]"
-            else
-                plugin_output="#[fg=${PALLETE[white]},bg=${accent_color}]#($plugin_script_path)#[none]"
-            fi
+            plugin_output="#[fg=${PALLETE[white]},bg=${accent_color}]#($plugin_script_path)#[none]"
 
             plugin_icon_output="${separator_icon_start}#[fg=${PALLETE[white]},bg=${accent_color_icon}]${plugin_icon}${separator_icon_end}"
 
