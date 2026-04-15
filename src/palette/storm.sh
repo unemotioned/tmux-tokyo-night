@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-#Tokyo Night Storm Pallet
-declare -A PALLETE=(
+#Tokyo Night Storm Palette
+declare -A PALETTE=(
     [none]="NONE"
     [bg_dark]="#1f2335"
     [bg]="#24283b"
@@ -35,4 +35,4 @@ declare -A PALLETE=(
     [white]="#ffffff"
 )
 
-export PALLETE
+export PALETTE

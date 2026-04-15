@@ -10,12 +10,12 @@ CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 theme_disable_plugins=$(get_tmux_option "@theme_disable_plugins" 0)
 theme_bar_layout=$(get_tmux_option "@theme_bar_layout" "single")
 
-# shellcheck source=src/palletes/storm.sh
-. "$CURRENT_DIR/palletes/storm.sh"
+# shellcheck source=src/palette/storm.sh
+. "$CURRENT_DIR/palette/storm.sh"
 
 ### Load Options
-border_style_active_pane=$(get_tmux_option "@theme_active_pane_border_style" "${PALLETE['dark5']}")
-border_style_inactive_pane=$(get_tmux_option "@theme_inactive_pane_border_style" "${PALLETE[bg_highlight]}")
+border_style_active_pane=$(get_tmux_option "@theme_active_pane_border_style" "${PALETTE['dark5']}")
+border_style_inactive_pane=$(get_tmux_option "@theme_inactive_pane_border_style" "${PALETTE[bg_highlight]}")
 right_separator=$(get_tmux_option "@theme_right_separator" "")
 transparent=$(get_tmux_option "@theme_transparent_status_bar" "false")
 
@@ -35,14 +35,14 @@ tmux set-window-option -g window-status-activity-style "$window_with_activity_st
 tmux set-window-option -g window-status-bell-style "${window_status_bell_style}"
 
 # message styling
-tmux set-option -g message-style "bg=${PALLETE[red]},fg=${PALLETE[bg_dark]}"
+tmux set-option -g message-style "bg=${PALETTE[red]},fg=${PALETTE[bg_dark]}"
 
 # status bar
-status_bar_bg=${PALLETE[bg_highlight]}
+status_bar_bg=${PALETTE[bg_highlight]}
 if [ "$transparent" = "true" ]; then
     status_bar_bg="default"
 fi
-tmux set-option -g status-style "bg=${status_bar_bg},fg=${PALLETE[white]}"
+tmux set-option -g status-style "bg=${status_bar_bg},fg=${PALETTE[white]}"
 
 # border color
 tmux set-option -g pane-active-border-style "fg=$border_style_active_pane"
@@ -98,26 +98,26 @@ if [ "$theme_disable_plugins" -ne 1 ]; then
 
             # For every plugin, turn accent_color and accent_color_icon into
             # the colors from the palette
-            accent_color="${PALLETE[$accent_color]}"
-            accent_color_icon="${PALLETE[$accent_color_icon]}"
+            accent_color="${PALETTE[$accent_color]}"
+            accent_color_icon="${PALETTE[$accent_color_icon]}"
 
-            separator_end="#[fg=${PALLETE[bg_highlight]},bg=${accent_color}]${right_separator}#[none]"
-            separator_icon_start="#[fg=${accent_color_icon},bg=${PALLETE[bg_highlight]}]${right_separator}#[none]"
+            separator_end="#[fg=${PALETTE[bg_highlight]},bg=${accent_color}]${right_separator}#[none]"
+            separator_icon_start="#[fg=${accent_color_icon},bg=${PALETTE[bg_highlight]}]${right_separator}#[none]"
             separator_icon_end="#[fg=${accent_color},bg=${accent_color_icon}]${right_separator}#[none]"
             if [ "$transparent" = "true" ]; then
                 separator_icon_start="#[fg=${accent_color_icon},bg=default]${right_separator}#[none]"
                 separator_icon_end="#[fg=${accent_color},bg=${accent_color_icon}]${right_separator}#[none]"
                 separator_end="#[fg=${accent_color},bg=default]${right_separator_inverse}#[none]"
             else
-                separator_icon_start="#[fg=${accent_color_icon},bg=${PALLETE[bg_highlight]}]${right_separator}#[none]"
+                separator_icon_start="#[fg=${accent_color_icon},bg=${PALETTE[bg_highlight]}]${right_separator}#[none]"
                 separator_icon_end="#[fg=${accent_color},bg=${accent_color_icon}]${right_separator}#[none]"
-                separator_end="#[fg=${PALLETE[bg_highlight]},bg=${accent_color}]${right_separator}#[none]"
+                separator_end="#[fg=${PALETTE[bg_highlight]},bg=${accent_color}]${right_separator}#[none]"
             fi
 
             plugin_output_string=""
-            plugin_output="#[fg=${PALLETE[white]},bg=${accent_color}]#($plugin_script_path)#[none]"
+            plugin_output="#[fg=${PALETTE[white]},bg=${accent_color}]#($plugin_script_path)#[none]"
 
-            plugin_icon_output="${separator_icon_start}#[fg=${PALLETE[white]},bg=${accent_color_icon}]${plugin_icon}${separator_icon_end}"
+            plugin_icon_output="${separator_icon_start}#[fg=${PALETTE[white]},bg=${accent_color_icon}]${plugin_icon}${separator_icon_end}"
 
             if [ ! $is_last_plugin -eq 1 ] && [ "${#plugins[@]}" -gt 1 ]; then
                 plugin_output_string="${plugin_icon_output}${plugin_output} ${separator_end}"

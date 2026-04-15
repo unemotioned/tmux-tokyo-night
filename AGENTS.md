@@ -115,7 +115,7 @@ export LC_ALL=en_US.UTF-8  # Consistent locale
 **Conventions:**
 
 - `snake_case` for local variables and functions
-- `UPPERCASE` for exported constants: `CACHE_DIR`, `PALLETE`, `ROOT_DIR`
+- `UPPERCASE` for exported constants: `CACHE_DIR`, `PALETTE`, `ROOT_DIR`
 - Plugin configuration pattern: `plugin_<name>_<property>`
   - Examples: `plugin_git_icon`, `plugin_kubernetes_accent_color`
 - Prefix private variables with underscore: `_CACHE_IS_MACOS`
@@ -277,7 +277,7 @@ printf '%s' "$output"
 
 **Tmux formatting:**
 
-- Access colors via: `${PALLETE[color_name]}`
+- Access colors via: `${PALETTE[color_name]}`
 - Use tmux format strings: `#[fg=color,bg=color]`
 - Check theme.sh for formatting examples
 
@@ -361,7 +361,7 @@ src/
 ├── utils.sh                # Common utilities (88 lines)
 ├── theme.sh                # Main theme loader
 ├── conditional_plugin.sh   # Conditional plugin wrapper
-├── palletes/               # Color scheme
+├── palette/               # Color scheme
 │   └── storm.sh
 └── plugin/                 # Plugin modules (15 total)
     ├── git.sh             # Example: ~82 lines
