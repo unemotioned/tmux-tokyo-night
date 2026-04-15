@@ -101,8 +101,8 @@ weather_fetch_openmeteo() {
     # Parse temperature and humidity using sed
     local temp
     local humidity
-    temp=$(echo "$response" | sed -n 's/.*"temperature_2m":\([^,}]*\).*/\1/p' | tail -1)
-    humidity=$(echo "$response" | sed -n 's/.*"relative_humidity_2m":\([^,}]*\).*/\1/p' | tail -1)
+    temp=$(sed -n 's/.*"temperature_2m":\([^,}]*\).*/\1/p' <<< "$response" | tail -1)
+    humidity=$(sed -n 's/.*"relative_humidity_2m":\([^,}]*\).*/\1/p' <<< "$response" | tail -1)
 
     if [[ -z "$temp" || -z "$humidity" ]]; then
         printf 'N/A'
