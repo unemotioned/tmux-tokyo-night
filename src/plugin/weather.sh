@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 # =============================================================================
 # Plugin: weather
-# Description: Display weather information with automatic fallback
-# Primary API: Open-Meteo (free, no API key, reliable, uses IP-based geolocation)
-# Fallback API: wttr.in (supports custom locations and formats)
-# Dependencies: curl
+# Description: Display weather information using Open-Meteo API
+# Dependencies: curl, jq
 # =============================================================================
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -26,11 +24,7 @@ plugin_weather_accent_color=$(get_tmux_option "@theme_plugin_weather_accent_colo
 plugin_weather_accent_color_icon=$(get_tmux_option "@theme_plugin_weather_accent_color_icon" "blue0")
 
 # Plugin-specific options
-# Note: @theme_plugin_weather_location only applies to wttr.in fallback
-# Open-Meteo (primary) uses IP-based geolocation automatically
-plugin_weather_location=$(get_tmux_option "@theme_plugin_weather_location" "")
 plugin_weather_unit=$(get_tmux_option "@theme_plugin_weather_unit" "")
-plugin_weather_format=$(get_tmux_option "@theme_plugin_weather_format" "%t H:%h")
 
 # Cache TTL in seconds (default: 900 seconds = 15 minutes)
 WEATHER_CACHE_TTL=$(get_tmux_option "@theme_plugin_weather_cache_ttl" "900")
@@ -86,7 +80,7 @@ weather_detect_location() {
 }
 
 # -----------------------------------------------------------------------------
-# Detect location via IP for fallback API
+# Detect coordinates via IP
 # Returns: Latitude,Longitude or empty string
 # -----------------------------------------------------------------------------
 weather_detect_coordinates() {
@@ -114,10 +108,10 @@ weather_detect_coordinates() {
 }
 
 # -----------------------------------------------------------------------------
-# Fetch weather from Open-Meteo (fallback API, no key required)
+# Fetch weather from Open-Meteo API
 # Arguments:
 #   $1 - Latitude,Longitude (optional)
-# Returns: Weather string in same format as wttr.in
+# Returns: Weather string
 # -----------------------------------------------------------------------------
 weather_fetch_openmeteo() {
     local coords="$1"
@@ -157,7 +151,7 @@ weather_fetch_openmeteo() {
         return 1
     fi
 
-    # Format output to match wttr.in style (handle unit conversion if needed)
+    # Format output with unit conversion if needed
     local temp_display
     if [[ "$plugin_weather_unit" == "u" ]]; then
         # Convert Celsius to Fahrenheit
@@ -167,72 +161,6 @@ weather_fetch_openmeteo() {
     fi
 
     printf '%s H:%s%%' "$temp_display" "$humidity"
-}
-
-# -----------------------------------------------------------------------------
-# Fetch weather data from wttr.in
-# Arguments:
-#   $1 - Location (optional)
-# Returns: Weather string
-# -----------------------------------------------------------------------------
-weather_fetch_wttr() {
-    local location="$1"
-    local url
-
-    # Build URL - if no location, wttr.in uses IP-based location
-    if [[ -n "$location" ]]; then
-        # URL encode the location properly using simple sed replacement
-        local encoded_location
-        encoded_location=$(printf '%s' "$location" | sed 's/ /%20/g; s/,/%2C/g')
-        url="https://wttr.in/${encoded_location}?"
-    else
-        url="https://wttr.in/?"
-    fi
-
-    # Add unit parameter if specified
-    [[ -n "$plugin_weather_unit" ]] && url+="${plugin_weather_unit}&"
-
-    # URL encode the format string more thoroughly
-    local encoded_format
-    encoded_format=$(printf '%s' "$plugin_weather_format" | sed 's/%/%25/g; s/ /%20/g; s/:/%3A/g; s/+/%2B/g')
-    url+="format=${encoded_format}"
-
-    local weather
-    weather=$(curl -sL --connect-timeout 5 --max-time 10 "$url" 2>/dev/null)
-
-    # Validate response
-    if [[ -z "$weather" || "$weather" == *"Unknown"* || "$weather" == *"ERROR"* || ${#weather} -gt 50 ]]; then
-        printf 'N/A'
-        return 1
-    fi
-
-    printf '%s' "$weather"
-}
-
-# -----------------------------------------------------------------------------
-# Fetch weather with fallback strategy
-# Arguments:
-#   $1 - Location (optional, only used for wttr.in fallback)
-# Returns: Weather string
-# -----------------------------------------------------------------------------
-weather_fetch() {
-    local location="$1"
-    local result
-
-    # Try Open-Meteo first (more reliable)
-    result=$(weather_fetch_openmeteo "")
-
-    # If Open-Meteo succeeded, return result
-    if [[ "$result" != "N/A" ]]; then
-        printf '%s' "$result"
-        return 0
-    fi
-
-    # Open-Meteo failed, try wttr.in as fallback
-    result=$(weather_fetch_wttr "$location")
-
-    printf '%s' "$result"
-    [[ "$result" != "N/A" ]] && return 0 || return 1
 }
 
 # =============================================================================
@@ -255,15 +183,9 @@ load_plugin() {
         fi
     fi
 
-    # Determine location - only use configured location, otherwise let wttr.in auto-detect
-    local location=""
-    if [[ -n "$plugin_weather_location" ]]; then
-        location="$plugin_weather_location"
-    fi
-
-    # Fetch weather
+    # Fetch weather from Open-Meteo
     local result
-    result=$(weather_fetch "$location")
+    result=$(weather_fetch_openmeteo "")
 
     # Cache and output
     cache_set "$WEATHER_CACHE_KEY" "$result"
