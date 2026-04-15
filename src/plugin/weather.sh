@@ -90,7 +90,7 @@ weather_fetch_openmeteo() {
     # If still no coordinates, can't fetch
     if [[ -z "$coords" ]]; then
         printf 'N/A'
-        return 1
+        return 0
     fi
 
     local lat="${coords%,*}"
@@ -103,7 +103,7 @@ weather_fetch_openmeteo() {
 
     if [[ -z "$response" ]]; then
         printf 'N/A'
-        return 1
+        return 0
     fi
 
     # Parse temperature and humidity using sed
@@ -114,7 +114,7 @@ weather_fetch_openmeteo() {
 
     if [[ -z "$temp" || -z "$humidity" ]]; then
         printf 'N/A'
-        return 1
+        return 0
     fi
 
     # Format output with unit conversion if needed
