@@ -2,7 +2,7 @@
 # =============================================================================
 # Plugin: weather
 # Description: Display weather information using Open-Meteo API
-# Dependencies: curl, jq
+# Dependencies: curl
 # =============================================================================
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -61,7 +61,7 @@ weather_detect_coordinates() {
 
     # Fetch coordinates from IP geolocation using ipinfo.io
     local coords
-    coords=$(curl -s --connect-timeout 5 --max-time 10 https://ipinfo.io/loc 2>/dev/null | tr -d '\n')
+    coords=$(curl -s --connect-timeout 3 --max-time 5 https://ipinfo.io/loc 2>/dev/null | tr -d '\n')
 
     if [[ -n "$coords" && "$coords" =~ ^-?[0-9]+\.?[0-9]*,-?[0-9]+\.?[0-9]*$ ]]; then
         cache_set "$coords_cache_key" "$coords"
@@ -98,7 +98,7 @@ weather_fetch_openmeteo() {
 
     # Fetch current weather from Open-Meteo
     local response
-    response=$(curl -sL --connect-timeout 5 --max-time 10 \
+    response=$(curl -sL --connect-timeout 3 --max-time 5 \
         "https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m&temperature_unit=celsius" 2>/dev/null)
 
     if [[ -z "$response" ]]; then
@@ -120,10 +120,9 @@ weather_fetch_openmeteo() {
     # Format output with unit conversion if needed
     local temp_display
     if [[ "$plugin_weather_unit" == "u" ]]; then
-        # Convert Celsius to Fahrenheit
-        temp_display=$(awk "BEGIN {printf \"%.0f°F\", ($temp * 9/5) + 32}")
+        temp_display="$(((${temp%.*} * 9 / 5) + 32))°F"
     else
-        temp_display=$(printf "%.0f°C" "$temp")
+        temp_display="${temp%.*}°C"
     fi
 
     printf '%s H:%s%%' "$temp_display" "$humidity"
