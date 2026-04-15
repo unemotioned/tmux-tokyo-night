@@ -38,14 +38,6 @@ export plugin_weather_icon plugin_weather_accent_color plugin_weather_accent_col
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Check if curl is available
-# Returns: 0 if available, 1 otherwise
-# -----------------------------------------------------------------------------
-weather_check_dependencies() {
-    command -v curl &>/dev/null
-}
-
-# -----------------------------------------------------------------------------
 # Detect coordinates via IP
 # Returns: Latitude,Longitude or empty string
 # -----------------------------------------------------------------------------
@@ -133,10 +125,7 @@ weather_fetch_openmeteo() {
 # =============================================================================
 
 load_plugin() {
-    # Check dependencies - fail silently if curl is not available
-    if ! weather_check_dependencies; then
-        return 0
-    fi
+    command -v curl &>/dev/null || return 0
 
     # Try cache first
     local cached_value
