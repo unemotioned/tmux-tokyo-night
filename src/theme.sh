@@ -101,9 +101,6 @@ if [ "$theme_disable_plugins" -ne 1 ]; then
             accent_color="${PALETTE[$accent_color]}"
             accent_color_icon="${PALETTE[$accent_color_icon]}"
 
-            separator_end="#[fg=${PALETTE[bg_highlight]},bg=${accent_color}]${right_separator}#[none]"
-            separator_icon_start="#[fg=${accent_color_icon},bg=${PALETTE[bg_highlight]}]${right_separator}#[none]"
-            separator_icon_end="#[fg=${accent_color},bg=${accent_color_icon}]${right_separator}#[none]"
             if [ "$transparent" = "true" ]; then
                 separator_icon_start="#[fg=${accent_color_icon},bg=default]${right_separator}#[none]"
                 separator_icon_end="#[fg=${accent_color},bg=${accent_color_icon}]${right_separator}#[none]"
