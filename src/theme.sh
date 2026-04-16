@@ -28,47 +28,47 @@ window_status_bell_style=$(get_tmux_option "@theme_status_bell_style" "bold")
 
 IFS=',' read -r -a plugins <<<"$(get_tmux_option "@theme_plugins" "weather")"
 
-tmux set-option -g status-left-length 100
-tmux set-option -g status-right-length 100
+tmux set -g status-left-length 100
+tmux set -g status-right-length 100
 
-tmux set-window-option -g window-status-activity-style "$window_with_activity_style"
-tmux set-window-option -g window-status-bell-style "${window_status_bell_style}"
+tmux setw -g window-status-activity-style "$window_with_activity_style"
+tmux setw -g window-status-bell-style "${window_status_bell_style}"
 
 # message styling
-tmux set-option -g message-style "bg=${PALETTE[red]},fg=${PALETTE[bg_dark]}"
+tmux set -g message-style "bg=${PALETTE[red]},fg=${PALETTE[bg_dark]}"
 
 # status bar
 status_bar_bg=${PALETTE[bg_highlight]}
 if [ "$transparent" = "true" ]; then
     status_bar_bg="default"
 fi
-tmux set-option -g status-style "bg=${status_bar_bg},fg=${PALETTE[white]}"
+tmux set -g status-style "bg=${status_bar_bg},fg=${PALETTE[white]}"
 
 # border color
-tmux set-option -g pane-active-border-style "fg=$border_style_active_pane"
-if ! tmux set-option -g pane-border-style "#{?pane_synchronized,fg=$border_style_active_pane,fg=$border_style_inactive_pane}" &>/dev/null; then
-    tmux set-option -g pane-border-style "fg=$border_style_active_pane,fg=$border_style_inactive_pane"
+tmux set -g pane-active-border-style "fg=$border_style_active_pane"
+if ! tmux set -g pane-border-style "#{?pane_synchronized,fg=$border_style_active_pane,fg=$border_style_inactive_pane}" &>/dev/null; then
+    tmux set -g pane-border-style "fg=$border_style_active_pane,fg=$border_style_inactive_pane"
 fi
 
 ### Status bar lines setup
 if [ "$theme_bar_layout" = "double" ]; then
-    tmux set-option -g status 2
+    tmux set -g status 2
 else
-    tmux set-option -g status on
+    tmux set -g status on
     # Reset status-format to default for single mode
-    tmux set-option -g status-format[0] "#[align=left range=left #{E:status-left-style}]#[push-default]#{T;=/#{status-left-length}:status-left}#[pop-default]#[norange default]#[list=on align=#{status-justify}]#[list=left-marker]<#[list=right-marker]>#[list=on]#{W:#[range=window|#{window_index} #{E:window-status-style}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}},#[range=window|#{window_index} list=focus #{?#{!=:#{E:window-status-current-style},default},#{E:window-status-current-style},#{E:window-status-style}}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-current-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}}}#[nolist align=right range=right #{E:status-right-style}]#[push-default]#{T;=/#{status-right-length}:status-right}#[pop-default]#[norange default]"
-    tmux set-option -gu status-format[1] 2>/dev/null || true
+    tmux set -g status-format[0] "#[align=left range=left #{E:status-left-style}]#[push-default]#{T;=/#{status-left-length}:status-left}#[pop-default]#[norange default]#[list=on align=#{status-justify}]#[list=left-marker]<#[list=right-marker]>#[list=on]#{W:#[range=window|#{window_index} #{E:window-status-style}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}},#[range=window|#{window_index} list=focus #{?#{!=:#{E:window-status-current-style},default},#{E:window-status-current-style},#{E:window-status-style}}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-current-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}}}#[nolist align=right range=right #{E:status-right-style}]#[push-default]#{T;=/#{status-right-length}:status-right}#[pop-default]#[norange default]"
+    tmux set -gu status-format[1] 2>/dev/null || true
 fi
 
 ### Left side
-tmux set-option -g status-left "$(generate_left_side_string)"
+tmux set -g status-left "$(generate_left_side_string)"
 
 ### Windows list
-tmux set-window-option -g window-status-format "$(generate_inactive_window_string)"
-tmux set-window-option -g window-status-current-format "$(generate_active_window_string)"
+tmux setw -g window-status-format "$(generate_inactive_window_string)"
+tmux setw -g window-status-current-format "$(generate_active_window_string)"
 
 ### Right side
-tmux set-option -g status-right ""
+tmux set -g status-right ""
 
 # Check if plugins array is empty before proceeding
 if [ "$theme_disable_plugins" -ne 1 ]; then
@@ -76,11 +76,12 @@ if [ "$theme_disable_plugins" -ne 1 ]; then
     is_last_plugin=0
     palette_white="${PALETTE[white]}"
     palette_bg_highlight="${PALETTE[bg_highlight]}"
+    status_right_parts=()
 
     for plugin in "${plugins[@]}"; do
 
         if [ ! -f "${CURRENT_DIR}/plugin/${plugin}.sh" ]; then
-            tmux set-option -ga status-right "${plugin}"
+            status_right_parts+=("${plugin}")
         else
             if [ "$plugin" == "$last_plugin" ]; then
                 is_last_plugin=1
@@ -113,29 +114,28 @@ if [ "$theme_disable_plugins" -ne 1 ]; then
                 separator_end="#[fg=${palette_bg_highlight},bg=${accent_color}]${right_separator}#[none]"
             fi
 
-            plugin_output_string=""
             plugin_output="#[fg=${palette_white},bg=${accent_color}]#($plugin_script_path)#[none]"
 
             plugin_icon_output="${separator_icon_start}#[fg=${palette_white},bg=${accent_color_icon}]${plugin_icon}${separator_icon_end}"
 
             if [ ! $is_last_plugin -eq 1 ] && [ "${#plugins[@]}" -gt 1 ]; then
-                plugin_output_string="${plugin_icon_output}${plugin_output} ${separator_end}"
+                status_right_parts+=("${plugin_icon_output}${plugin_output} ${separator_end}")
             else
-                plugin_output_string="${plugin_icon_output}${plugin_output} "
+                status_right_parts+=("${plugin_icon_output}${plugin_output} ")
             fi
-
-            tmux set-option -ga status-right "$plugin_output_string"
         fi
     done
+
+    IFS='' tmux set -g status-right "${status_right_parts[*]}"
 fi
 
 # For double layout, set up the two status lines
 if [ "$theme_bar_layout" = "double" ]; then
     # Line 0: Session + Windows (no plugins on right)
-    tmux set-option -g status-format[0] "#[align=left range=left #{E:status-left-style}]#[push-default]#{T;=/#{status-left-length}:status-left}#[pop-default]#[norange default]#[list=on align=#{status-justify}]#[list=left-marker]<#[list=right-marker]>#[list=on]#{W:#[range=window|#{window_index} #{E:window-status-style}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}},#[range=window|#{window_index} list=focus #{?#{!=:#{E:window-status-current-style},default},#{E:window-status-current-style},#{E:window-status-style}}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-current-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}}}#[nolist align=right range=right #{E:status-right-style}]#[push-default]#[pop-default]#[norange default]"
+    tmux set -g status-format[0] "#[align=left range=left #{E:status-left-style}]#[push-default]#{T;=/#{status-left-length}:status-left}#[pop-default]#[norange default]#[list=on align=#{status-justify}]#[list=left-marker]<#[list=right-marker]>#[list=on]#{W:#[range=window|#{window_index} #{E:window-status-style}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}},#[range=window|#{window_index} list=focus #{?#{!=:#{E:window-status-current-style},default},#{E:window-status-current-style},#{E:window-status-style}}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-current-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}}}#[nolist align=right range=right #{E:status-right-style}]#[push-default]#[pop-default]#[norange default]"
 
     # Line 1: Plugins only (right aligned)
-    tmux set-option -g status-format[1] "#[align=right range=right #{E:status-right-style}]#[push-default]#{T;=/#{status-right-length}:status-right}#[pop-default]#[norange default]"
+    tmux set -g status-format[1] "#[align=right range=right #{E:status-right-style}]#[push-default]#{T;=/#{status-right-length}:status-right}#[pop-default]#[norange default]"
 fi
 
-tmux set-window-option -g window-status-separator ''
+tmux setw -g window-status-separator ''
