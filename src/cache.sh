@@ -25,8 +25,8 @@
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/tmux-tokyo-night"
 
 # Detect OS once for stat command compatibility
-_CACHE_IS_MACOS=""
-[[ "$(uname)" == "Darwin" ]] && _CACHE_IS_MACOS="1"
+_CACHE_IS_MACOS=false
+[[ "$(uname)" == "Darwin" ]] && _CACHE_IS_MACOS=true
 
 # -----------------------------------------------------------------------------
 # Ensures the cache directory exists
@@ -46,7 +46,28 @@ cache_init() {
 # -----------------------------------------------------------------------------
 cache_file_path() {
     local plugin_name="$1"
-    echo "${CACHE_DIR}/${plugin_name}.cache"
+    printf '%s' "${CACHE_DIR}/${plugin_name}.cache"
+}
+
+# -----------------------------------------------------------------------------
+# Get file modification time (OS-specific)
+#
+# Arguments:
+#   $1 - Cache file path
+#
+# Output:
+#   File mtime in seconds since epoch
+#
+# Returns:
+#   0 if successful, 1 otherwise
+# -----------------------------------------------------------------------------
+_get_file_mtime() {
+    local cache_file="$1"
+    if [[ "$_CACHE_IS_MACOS" == true ]]; then
+        stat -f "%m" "$cache_file" 2>/dev/null
+    else
+        stat -c "%Y" "$cache_file" 2>/dev/null
+    fi
 }
 
 # -----------------------------------------------------------------------------
@@ -64,18 +85,9 @@ cache_is_valid() {
     local ttl_seconds="$2"
     local cache_file="${CACHE_DIR}/${plugin_name}.cache"
 
-    # Check if cache file exists
     [[ -f "$cache_file" ]] || return 1
 
-    # Get file modification time (OS-specific)
-    local file_mtime
-    if [[ -n "$_CACHE_IS_MACOS" ]]; then
-        file_mtime=$(stat -f "%m" "$cache_file" 2>/dev/null) || return 1
-    else
-        file_mtime=$(stat -c "%Y" "$cache_file" 2>/dev/null) || return 1
-    fi
-
-    # Check if cache has expired
+    local file_mtime=$(_get_file_mtime "$cache_file") || return 1
     local current_time
     current_time=$(date +%s)
     (((current_time - file_mtime) < ttl_seconds))
@@ -97,12 +109,11 @@ cache_is_valid() {
 cache_get() {
     local plugin_name="$1"
     local ttl_seconds="$2"
-    local cache_file="${CACHE_DIR}/${plugin_name}.cache"
 
     cache_init
 
     if cache_is_valid "$plugin_name" "$ttl_seconds"; then
-        cat "$cache_file"
+        cat "${CACHE_DIR}/${plugin_name}.cache"
         return 0
     fi
 
@@ -121,7 +132,7 @@ cache_set() {
     local value="$2"
 
     cache_init
-    echo -n "$value" >"${CACHE_DIR}/${plugin_name}.cache"
+    printf '%s' "$value" >"${CACHE_DIR}/${plugin_name}.cache"
 }
 
 # -----------------------------------------------------------------------------
@@ -162,18 +173,10 @@ cache_remaining_ttl() {
         return
     }
 
-    local file_mtime
-    if [[ -n "$_CACHE_IS_MACOS" ]]; then
-        file_mtime=$(stat -f "%m" "$cache_file" 2>/dev/null) || {
-            printf '0'
-            return
-        }
-    else
-        file_mtime=$(stat -c "%Y" "$cache_file" 2>/dev/null) || {
-            printf '0'
-            return
-        }
-    fi
+    local file_mtime=$(_get_file_mtime "$cache_file") || {
+        printf '0'
+        return
+    }
 
     local current_time remaining
     current_time=$(date +%s)
