@@ -13,9 +13,23 @@ theme_bar_layout=$(get_tmux_option "@theme_bar_layout" "single")
 # shellcheck source=src/palette/storm.sh
 . "$CURRENT_DIR/palette/storm.sh"
 
+# Pre-cache commonly used palette values
+palette_white="${PALETTE[white]}"
+palette_bg_highlight="${PALETTE[bg_highlight]}"
+palette_bg_dark="${PALETTE[bg_dark]}"
+palette_red="${PALETTE[red]}"
+palette_yellow="${PALETTE[yellow]}"
+palette_green="${PALETTE[green]}"
+palette_fg_gutter="${PALETTE[fg_gutter]}"
+palette_dark3="${PALETTE[dark3]}"
+palette_dark5="${PALETTE[dark5]}"
+palette_magenta="${PALETTE[magenta]}"
+palette_purple="${PALETTE[purple]}"
+palette_fg_gutter="${PALETTE[fg_gutter]}"
+
 ### Load Options
-border_style_active_pane=$(get_tmux_option "@theme_active_pane_border_style" "${PALETTE['dark5']}")
-border_style_inactive_pane=$(get_tmux_option "@theme_inactive_pane_border_style" "${PALETTE[bg_highlight]}")
+border_style_active_pane=$(get_tmux_option "@theme_active_pane_border_style" "${palette_dark5}")
+border_style_inactive_pane=$(get_tmux_option "@theme_inactive_pane_border_style" "${palette_bg_highlight}")
 right_separator=$(get_tmux_option "@theme_right_separator" "")
 transparent=$(get_tmux_option "@theme_transparent_status_bar" "false")
 
@@ -35,14 +49,14 @@ tmux setw -g window-status-activity-style "$window_with_activity_style"
 tmux setw -g window-status-bell-style "${window_status_bell_style}"
 
 # message styling
-tmux set -g message-style "bg=${PALETTE[red]},fg=${PALETTE[bg_dark]}"
+tmux set -g message-style "bg=${palette_red},fg=${palette_bg_dark}"
 
 # status bar
-status_bar_bg=${PALETTE[bg_highlight]}
+status_bar_bg=${palette_bg_highlight}
 if [ "$transparent" = "true" ]; then
     status_bar_bg="default"
 fi
-tmux set -g status-style "bg=${status_bar_bg},fg=${PALETTE[white]}"
+tmux set -g status-style "bg=${status_bar_bg},fg=${palette_white}"
 
 # border color
 tmux set -g pane-active-border-style "fg=$border_style_active_pane"
@@ -74,8 +88,6 @@ tmux set -g status-right ""
 if [ "$theme_disable_plugins" -ne 1 ]; then
     last_plugin="${plugins[-1]}"
     is_last_plugin=0
-    palette_white="${PALETTE[white]}"
-    palette_bg_highlight="${PALETTE[bg_highlight]}"
     status_right_parts=()
 
     for plugin in "${plugins[@]}"; do
