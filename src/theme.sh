@@ -74,6 +74,8 @@ tmux set-option -g status-right ""
 if [ "$theme_disable_plugins" -ne 1 ]; then
     last_plugin="${plugins[-1]}"
     is_last_plugin=0
+    palette_white="${PALETTE[white]}"
+    palette_bg_highlight="${PALETTE[bg_highlight]}"
 
     for plugin in "${plugins[@]}"; do
 
@@ -106,15 +108,15 @@ if [ "$theme_disable_plugins" -ne 1 ]; then
                 separator_icon_end="#[fg=${accent_color},bg=${accent_color_icon}]${right_separator}#[none]"
                 separator_end="#[fg=${accent_color},bg=default]${right_separator_inverse}#[none]"
             else
-                separator_icon_start="#[fg=${accent_color_icon},bg=${PALETTE[bg_highlight]}]${right_separator}#[none]"
+                separator_icon_start="#[fg=${accent_color_icon},bg=${palette_bg_highlight}]${right_separator}#[none]"
                 separator_icon_end="#[fg=${accent_color},bg=${accent_color_icon}]${right_separator}#[none]"
-                separator_end="#[fg=${PALETTE[bg_highlight]},bg=${accent_color}]${right_separator}#[none]"
+                separator_end="#[fg=${palette_bg_highlight},bg=${accent_color}]${right_separator}#[none]"
             fi
 
             plugin_output_string=""
-            plugin_output="#[fg=${PALETTE[white]},bg=${accent_color}]#($plugin_script_path)#[none]"
+            plugin_output="#[fg=${palette_white},bg=${accent_color}]#($plugin_script_path)#[none]"
 
-            plugin_icon_output="${separator_icon_start}#[fg=${PALETTE[white]},bg=${accent_color_icon}]${plugin_icon}${separator_icon_end}"
+            plugin_icon_output="${separator_icon_start}#[fg=${palette_white},bg=${accent_color_icon}]${plugin_icon}${separator_icon_end}"
 
             if [ ! $is_last_plugin -eq 1 ] && [ "${#plugins[@]}" -gt 1 ]; then
                 plugin_output_string="${plugin_icon_output}${plugin_output} ${separator_end}"
