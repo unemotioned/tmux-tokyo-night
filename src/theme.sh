@@ -20,12 +20,12 @@ palette_bg_dark="${PALETTE[bg_dark]}"
 palette_red="${PALETTE[red]}"
 palette_yellow="${PALETTE[yellow]}"
 palette_green="${PALETTE[green]}"
+palette_fg="${PALETTE[fg]}"
 palette_fg_gutter="${PALETTE[fg_gutter]}"
 palette_dark3="${PALETTE[dark3]}"
 palette_dark5="${PALETTE[dark5]}"
 palette_magenta="${PALETTE[magenta]}"
 palette_purple="${PALETTE[purple]}"
-palette_fg_gutter="${PALETTE[fg_gutter]}"
 
 ### Load Options
 border_style_active_pane=$(get_tmux_option "@theme_active_pane_border_style" "${palette_dark5}")
@@ -50,6 +50,10 @@ tmux setw -g window-status-bell-style "${window_status_bell_style}"
 
 # message styling
 tmux set -g message-style "bg=${palette_red},fg=${palette_bg_dark}"
+
+# selection styling
+tmux setw -g mode-style "bg=${palette_yellow},fg=${palette_bg_dark}"
+tmux setw -g tree-mode-border-style "fg=${palette_fg}"
 
 # status bar
 status_bar_bg=${palette_bg_highlight}
