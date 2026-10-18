@@ -49,7 +49,7 @@ tmux setw -g window-status-activity-style "$window_with_activity_style"
 tmux setw -g window-status-bell-style "${window_status_bell_style}"
 
 # message styling
-tmux set -g message-style "bg=${palette_red},fg=${palette_bg_dark}"
+tmux set -g message-style "bg=${palette_red},fg=${palette_bg_dark},fill=${palette_red}"
 
 # selection styling
 tmux setw -g mode-style "bg=${palette_yellow},fg=${palette_bg_dark}"
