@@ -37,7 +37,7 @@ function generate_left_side_string() {
 }
 
 function generate_inactive_window_string() {
-    local inactive_window_icon=$(get_tmux_option "@theme_plugin_inactive_window_icon" " ")
+    local inactive_window_icon=$(get_tmux_option "@theme_plugin_inactive_window_icon" "  ")
     local zoomed_window_icon=$(get_tmux_option "@theme_plugin_zoomed_window_icon" " ")
     local left_separator=$(get_tmux_option "@theme_left_separator" "")
     local inactive_window_title=$(get_tmux_option "@theme_inactive_window_title" "#W ")
@@ -51,7 +51,7 @@ function generate_inactive_window_string() {
 }
 
 function generate_active_window_string() {
-    local active_window_icon=$(get_tmux_option "@theme_plugin_active_window_icon" " ")
+    local active_window_icon=$(get_tmux_option "@theme_plugin_active_window_icon" "  ")
     local zoomed_window_icon=$(get_tmux_option "@theme_plugin_zoomed_window_icon" " ")
     local pane_synchronized_icon=$(get_tmux_option "@theme_plugin_pane_synchronized_icon" "✵")
     local left_separator=$(get_tmux_option "@theme_left_separator" "")
